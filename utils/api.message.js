@@ -1,0 +1,34 @@
+const { MINIMUM_PASSWORD_SIZE } = require("./app.constant.js");
+
+exports.INVALID_CREDENTIALS = "Invalid credentials";
+exports.LOGIN_SUCCESSFUL = "Logged in successfully";
+exports.NOT_FOUND = "Not found";
+exports.AN_ERROR_OCCURRED = "An error occurred";
+exports.UPDATE_SUCCESSFUL = "Update successful";
+exports.DELETED_SUCCESSFULLY = "Deleted successfully";
+exports.ADMIN_CREATED_SUCCESSFULLY = "Admin created successfully";
+exports.APARTMENT_CREATED_SUCCESSFULLY = "Apartment created successfully";
+exports.TENANT_CREATED_SUCCESSFULLY = "Tenant added successfully";
+exports.CASH_ADDED_SUCCESSFULLY = "Cash deposited successfully";
+exports.RENT_ADDED_SUCCESSFULLY = "Rent added successfully";
+exports.KIN_IS_REQUIRED = "Kin is required";
+exports.ID_PARAMETER_REQUIRED = "Parameter ID is required";
+exports.ROOM_NUMBER_REQUIRED = "Room number is required";
+exports.PRICE_REQUIRED = "Price is required";
+exports.AMOUNT_REQUIRED = "Amount is required";
+exports.USERNAME_REQUIRED = "Username is required";
+exports.FULL_NAME_REQUIRED = "Full name is required";
+exports.EMAIL_REQUIRED = "Email is required";
+exports.PHONE_REQUIRED = "Phone number is required";
+exports.DOB_REQUIRED = "Date of birth is required";
+exports.PREVIOUS_ADDRESS_REQUIRED =
+  "Previous resident address is required";
+exports. PASSWORD_REQUIRED = `Password must be of at least ${MINIMUM_PASSWORD_SIZE} characters, and contain at least one uppercase, lowercase and a number`;
+exports. APARTMENT_IS_OCCUPIED = "Apartment is occupied";
+exports. DATABASE_CONNECTED = "Database connected successfully";
+exports. DATABASE_NOT_CONNECTED = "Database not connected successfully";
+exports. INVALID_ROOM_NUMBER = "Invalid room number";
+exports. INVALID_PRICE = "Invalid price, price must be numbers";
+exports. FORBIDDEN = "Forbidden";
+exports. UNAUTHORIZED = "Unauthorized";
+exports. REQUEST_TOKEN = "Kindly request for a new token by logging in";
