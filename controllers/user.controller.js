@@ -217,7 +217,7 @@ exports.logout = (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    const user = userModel.findById(req.params.id);
+    const user = await userModel.findById(req.params.id);
 
     res.status(200).json({
       status: "success",
