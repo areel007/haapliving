@@ -5,6 +5,7 @@ const OTP = require("../utils/generateOTP");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
 const cloudinary = require("../utils/cloudinary");
+const User = require("../models/user.model");
 
 exports.register = async (req, res) => {
   try {
@@ -212,4 +213,20 @@ exports.logout = (req, res) => {
     status: "success",
     message: "logout successfully",
   });
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = userModel.findById(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      error,
+    });
+  }
 };
