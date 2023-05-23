@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 // routes
-app.use("/api/v1/auth", userRoute);
-app.use("/api/v1/apartment", upload.single('imageUrl'), apartmentRoute);
+app.use("/api/v1/auth", upload.single("userImageUrl"), userRoute);
+app.use("/api/v1/apartment", upload.single("imageUrl"), apartmentRoute);
 
 module.exports = app;

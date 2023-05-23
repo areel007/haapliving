@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userImageUrl: {
+    type: String,
+  },
+  cloudinaryId: {
+    type: String,
+  },
   category: {
     type: String,
   },

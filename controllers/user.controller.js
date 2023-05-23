@@ -4,9 +4,11 @@ const jwt = require("jsonwebtoken");
 const OTP = require("../utils/generateOTP");
 const nodemailer = require("nodemailer");
 const moment = require("moment");
+const cloudinary = require("../utils/cloudinary");
 
 exports.register = async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
     const { name, password, email, phoneNumber, category } = req.body;
 
     const salt = bcrypt.genSaltSync(10);
@@ -22,6 +24,8 @@ exports.register = async (req, res) => {
       category,
       otp,
       otpExpiry: moment().add(30, "minutes").toDate(),
+      userImageUrl: result.secure_url,
+      cloudinaryId: result.public_id,
     });
 
     await newUser.save();
@@ -205,7 +209,7 @@ exports.resetPassword = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.status(200).json({
-    status: 'success',
-    message: 'logout successfully'
-  })
-}
+    status: "success",
+    message: "logout successfully",
+  });
+};
