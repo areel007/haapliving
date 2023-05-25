@@ -23,6 +23,15 @@ const apartmentSchema = new mongoose.Schema({
   cloudinaryId: {
     type: String,
   },
+  category: {
+    type: String,
+  },
+  noBedroom: {
+    type: Number,
+  },
+  noBathroom: {
+    type: Number
+  }
 });
 
 const Apartment = mongoose.model("Apartment", apartmentSchema);
