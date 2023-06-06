@@ -3,8 +3,31 @@ const cloudinary = require("../utils/cloudinary");
 
 exports.createApartment = async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    const { title, description, location, price, category, noBedroom, noBathroom } = req.body;
+    const images = [];
+    const options = {
+      folder: "haapliving/apartments",
+      resource_type: "auto",
+    };
+
+    // Upload multiple images to Cloudinary
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload(file.path, options);
+      images.push({
+        image: result.secure_url,
+        cloudinaryId: result.public_id,
+      });
+    }
+
+    const {
+      title,
+      description,
+      location,
+      price,
+      category,
+      noBedroom,
+      noBathroom,
+    } = req.body;
+
     const newApartment = new Apartment({
       title,
       description,
@@ -13,8 +36,7 @@ exports.createApartment = async (req, res) => {
       category,
       noBedroom,
       noBathroom,
-      imageUrl: result.secure_url,
-      cloudinaryId: result.public_id,
+      images, // Save the array of images
     });
 
     await newApartment.save();
@@ -58,7 +80,11 @@ exports.getApartment = async (req, res) => {
 exports.deleteApartment = async (req, res) => {
   try {
     const apartment = await Apartment.findById(req.params.id);
-    await cloudinary.uploader.destroy(apartment.cloudinaryId);
+    apartment.images.map(async (image) =>
+      cloudinary.uploader.destroy(image.cloudinaryId)
+    );
+
+    // await cloudinary.uploader.destroy(imagePublicId);
     await Apartment.findByIdAndDelete(req.params.id);
     return res.status(200).json({
       status: "successful",
@@ -71,6 +97,36 @@ exports.deleteApartment = async (req, res) => {
     });
   }
 };
+
+// exports.deleteApartment = async (req, res) => {
+//   const apartmentId = req.params.id;
+
+//   try {
+//     // Retrieve apartment including image public IDs from MongoDB
+//     const apartment = await Apartment.findById(apartmentId);
+//     const imagePublicIds = apartment.images.map(image => image.publicId);
+
+//     // Delete images from Cloudinary
+//     await Promise.all(
+//       imagePublicIds.map(async publicId => {
+//         try {
+//           const deleteResult = await cloudinary1.api.delete_resources([publicId]);
+//           console.log(`Deleted image with public ID: ${publicId}`, deleteResult);
+//         } catch (error) {
+//           console.error(`Failed to delete image with public ID: ${publicId}`, error);
+//         }
+//       })
+//     );
+
+//     // Remove apartment from MongoDB
+//     await Apartment.findByIdAndDelete(apartmentId);
+
+//     res.json({ success: true });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'An error occurred during deletion.', detailedError: error.message });
+//   }
+// }
 
 exports.suggestedApartment = async (req, res) => {
   try {
@@ -89,7 +145,16 @@ exports.suggestedApartment = async (req, res) => {
 
 exports.searchApartment = async (req, res) => {
   try {
-    const { location, minPrice, maxPrice } = req.body;
+    const {
+      location,
+      minPrice,
+      maxPrice,
+      category,
+      minBedroom,
+      maxBedroom,
+      minBathroom,
+      maxBathroom,
+    } = req.body;
     const filter = {};
 
     if (location) {
@@ -104,7 +169,25 @@ exports.searchApartment = async (req, res) => {
       filter.price = { $lte: maxPrice };
     }
 
-    console.log(filter);
+    if (category) {
+      filter.category = category;
+    }
+
+    if (minBedroom && maxBedroom) {
+      filter.noBedroom = { $gte: minBedroom, $lte: maxBedroom };
+    } else if (minBedroom) {
+      filter.noBedroom = { $gte: minBedroom };
+    } else if (maxBedroom) {
+      filter.noBedroom = { $lte: maxBedroom };
+    }
+
+    if (minBathroom && maxBathroom) {
+      filter.noBathroom = { $gte: minBathroom, $lte: maxBathroom };
+    } else if (minBathroom) {
+      filter.noBathroom = { $gte: minBathroom };
+    } else if (maxBathroom) {
+      filter.noBathroom = { $lte: maxBathroom };
+    }
 
     const apartments = await Apartment.find(filter);
 

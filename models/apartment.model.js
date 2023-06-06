@@ -17,12 +17,21 @@ const apartmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  imageUrl: {
-    type: String,
+  images: {
+    type: [
+      {
+        image: {
+          type: String,
+        },
+        cloudinaryId: {
+          type: String,
+        },
+      },
+    ],
   },
-  cloudinaryId: {
-    type: String,
-  },
+  // cloudinaryId: {
+  //   type: String,
+  // },
   category: {
     type: String,
   },
@@ -30,8 +39,8 @@ const apartmentSchema = new mongoose.Schema({
     type: Number,
   },
   noBathroom: {
-    type: Number
-  }
+    type: Number,
+  },
 });
 
 const Apartment = mongoose.model("Apartment", apartmentSchema);
